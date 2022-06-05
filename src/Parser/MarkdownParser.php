@@ -96,7 +96,7 @@ final class MarkdownParser implements MarkdownParserInterface
 
         foreach ($markdownInput->getLines() as $lineNumber => $line) {
             $this->lineNumber = $lineNumber;
-            $this->parseLine($line);
+            $this->parseLine($line, $lineNumber);
         }
 
         // finalizeAndProcess
@@ -112,9 +112,9 @@ final class MarkdownParser implements MarkdownParserInterface
      * Analyze a line of text and update the document appropriately. We parse markdown text by calling this on each
      * line of input, then finalizing the document.
      */
-    private function parseLine(string $line): void
+    private function parseLine(string $line, int $lineNumber): void
     {
-        $this->cursor = new Cursor($line);
+        $this->cursor = new Cursor($line, $lineNumber);
 
         $matches = $this->parseBlockContinuation();
         if ($matches === null) {

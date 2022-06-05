@@ -22,6 +22,11 @@ class Cursor
     /** @psalm-readonly */
     private string $line;
 
+    /**
+     * @var int|null
+     */
+    private ?int $lineNumber;
+
     /** @psalm-readonly */
     private int $length;
 
@@ -55,13 +60,14 @@ class Cursor
     /**
      * @param string $line The line being parsed (ASCII or UTF-8)
      */
-    public function __construct(string $line)
+    public function __construct(string $line, ?int $lineNumber = null)
     {
         if (! \mb_check_encoding($line, 'UTF-8')) {
             throw new UnexpectedEncodingException('Unexpected encoding - UTF-8 or ASCII was expected');
         }
 
         $this->line             = $line;
+        $this->lineNumber       = $lineNumber;
         $this->length           = \mb_strlen($line, 'UTF-8') ?: 0;
         $this->isMultibyte      = $this->length !== \strlen($line);
         $this->lineContainsTabs = \strpos($line, "\t") !== false;
@@ -477,5 +483,10 @@ class Cursor
     public function getColumn(): int
     {
         return $this->column;
+    }
+
+    public function getLineNumber(): int
+    {
+        return $this->lineNumber;
     }
 }
